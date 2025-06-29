@@ -53,22 +53,28 @@
         });
       });
 
+    // Initialize viewer once, outside of selection event
+    window.addEventListener('DOMContentLoaded', () => {
+      viewer = new PDBeMolstarPlugin();
+      viewer.render('viewer-container', {
+        customData: {
+          url: '', // initially empty
+          format: 'cif'
+        },
+        ui: true
+      });
+    });
+
+    // On structure selection
     select.addEventListener('change', () => {
       const filename = select.value;
       if (!filename) return;
 
       const fileUrl = BASE_URL + encodeURIComponent(filename);
 
-      if (!viewer) {
-        viewer = new PDBeMolstarPlugin();
-      }
-
-      viewer.render('viewer-container', {
-        customData: {
-          url: fileUrl,
-          format: 'cif'
-        },
-        ui: true
+      viewer.load({
+        url: fileUrl,
+        format: 'cif'
       });
     });
   </script>
