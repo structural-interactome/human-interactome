@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Protein Structure Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar-plugin.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar.css" />
+  <style>
+    html, body {
+      margin: 0;
+      font-family: sans-serif;
+      height: 100%;
+    }
+    #topbar {
+      padding: 10px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ccc;
+    }
+    #viewer-container {
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar">
+    <label for="fileSelect">Select a structure: </label>
+    <select id="fileSelect">
+      <option value="">-- choose a file --</option>
+    </select>
+  </div>
+  <div id="viewer-container"></div>
+
+  <script>
+    const BASE_URL = 'https://structural-interactome.github.io/human-interactome/interaction_structures/';
+    const CSV_URL = 'https://raw.githubusercontent.com/structural-interactome/human-interactome/refs/heads/main/list/File_Name_List.csv';
+
+    const select = document.getElementById('fileSelect');
+    let viewer;
+
+    // Load CSV
+    fetch(CSV_URL)
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.trim().split('\n').slice(1); // Skip header
+        lines.forEach(filename => {
+          const option = document.createElement('option');
+          option.value = filename.trim();
+          option.textContent = filename.trim();
+          select.appendChild(option);
+        });
+      });
+
+    select.addEventListener('change', () => {
+      const filename = select.value;
+      if (!filename) return;
+      const fileUrl = BASE_URL + encodeURIComponent(filename);
+
+      if (!viewer) {
+        viewer = new PDBeMolstarPlugin();
+        viewer.render('viewer-container', {
+          customData: {
+            url: fileUrl,
+            format: 'cif'
+          },
+          ui: true
+        });
+      } else {
+        viewer.render('viewer-container', {
+          customData: {
+            url: fileUrl,
+            format: 'cif'
+          },
+          ui: true
+        });
+      }
+    });
+  </script>
+</body>
+</html>
