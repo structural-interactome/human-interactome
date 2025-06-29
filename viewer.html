@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mol* Viewer Frame</title>
+  <script src="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar-plugin.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar.css" />
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #viewer-container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewer-container"></div>
+  <script>
+    const viewer = new PDBeMolstarPlugin();
+
+    window.addEventListener('message', event => {
+      const fileUrl = event.data;
+      if (!fileUrl.endsWith('.cif')) return;
+
+      viewer.render('viewer-container', {
+        customData: { url: fileUrl, format: 'cif' },
+        ui: true
+      });
+    }, false);
+  </script>
+</body>
+</html>
