@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Protein Structure Viewer</title>
+  <title>Mol* CIF Viewer</title>
   <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -12,17 +12,28 @@
 <body>
   <div id="app"></div>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const file = params.get("file");
-    const viewer = new Molstar.Viewer('app', {
-      layoutIsExpanded: true,
-      layoutShowControls: true,
-    });
-    if (file) {
-      viewer.loadStructureFromUrl(file, 'cif');
-    } else {
-      document.body.innerHTML = '<p style="padding:20px;">No file specified.</p>';
+    async function initViewer() {
+      const params = new URLSearchParams(window.location.search);
+      const fileUrl = params.get('file');
+
+      const viewer = new Molstar.Viewer('app', {
+        layoutIsExpanded: true,
+        layoutShowControls: true,
+        showImportControls: false,
+      });
+
+      if (fileUrl) {
+        try {
+          await viewer.loadStructureFromUrl(fileUrl, 'cif');
+        } catch (e) {
+          document.body.innerHTML = '<p style="padding:20px;">Failed to load structure: ' + e.message + '</p>';
+        }
+      } else {
+        document.body.innerHTML = '<p style="padding:20px;">No file specified. Add ?file=... to the URL.</p>';
+      }
     }
+
+    initViewer();
   </script>
 </body>
 </html>
