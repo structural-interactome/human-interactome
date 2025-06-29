@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mol* Viewer (PDBe Plugin)</title>
-  <!-- Load the plugin script and its CSS from CDN -->
+  <title>Mol* Viewer</title>
   <script src="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar-plugin.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar.css" />
   <style>
@@ -12,22 +11,15 @@
   </style>
 </head>
 <body>
-  <div id="app">Loading PDBe Mol* Viewer...</div>
+  <div id="app">Loading structure...</div>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      // Check if the plugin loaded
-      if (typeof PDBeMolstarPlugin !== 'function') {
-        document.getElementById('app').innerText = '❌ PDBeMolstarPlugin not found.';
-        return;
-      }
-
       const file = new URLSearchParams(window.location.search).get('file');
       if (!file) {
-        document.getElementById('app').innerText = '⚠️ Please specify a ?file=... URL parameter.';
+        document.getElementById('app').innerText = 'No CIF file provided in ?file=...';
         return;
       }
 
-      // Render the structure
       const viewer = new PDBeMolstarPlugin();
       viewer.render('app', {
         customData: {
