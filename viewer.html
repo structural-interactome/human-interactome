@@ -2,46 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mol* Viewer (Safe Load)</title>
-  <style>
-    html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
-    #app { width: 100%; height: 100vh; }
-  </style>
+  <title>Mol* Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/molstar@1.2.0/build/viewer/molstar.umd.js"></script>
 </head>
 <body>
-  <div id="app">Loading Mol* Viewer...</div>
+  <pre id="out">Testing...</pre>
   <script>
-    function loadScript(src, callback) {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = callback;
-      script.onerror = () => {
-        document.getElementById('app').innerText = 'Failed to load Mol* script.';
-      };
-      document.head.appendChild(script);
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const out = document.getElementById('out');
 
-    loadScript('https://cdn.jsdelivr.net/npm/molstar@1.2.0/build/viewer/molstar.umd.js', () => {
       if (typeof Molstar === 'undefined') {
-        document.getElementById('app').innerText = 'Molstar is not defined after loading.';
-        return;
-      }
-
-      const viewer = new Molstar.Viewer('app', {
-        layoutIsExpanded: true,
-        layoutShowControls: true,
-      });
-
-      const params = new URLSearchParams(window.location.search);
-      const file = params.get('file');
-
-      if (file) {
-        viewer.loadStructureFromUrl(file, 'cif').catch(err => {
-          document.getElementById('app').innerText = 'Error loading CIF file: ' + err.message;
-          console.error(err);
-        });
+        out.innerText = 'Molstar is NOT defined.';
       } else {
-        document.getElementById('app').innerText = 'No file specified in the URL.';
+        out.innerText = 'Molstar IS defined.\n\n' + Object.keys(Molstar).join('\n');
       }
     });
   </script>
