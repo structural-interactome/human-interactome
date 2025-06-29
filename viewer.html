@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mol* Viewer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.css" />
+  <style>
+    body { margin: 0; font-family: sans-serif; background-color: #ffffff; }
+    #controls {
+      padding: 10px;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+    }
+    #structureInput {
+      padding: 6px;
+      font-size: 16px;
+      width: 300px;
+    }
+    #viewer {
+      width: 100%;
+      height: 90vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="structureInput">Enter CIF filename:</label>
+    <input type="text" id="structureInput" placeholder="e.g. Q6ZV65_O14744_Boltz-2_v2-1-1.cif" />
+  </div>
+  <div id="viewer"></div>
+
+  <script type="module" src="./viewer.mjs"></script>
+</body>
+</html>
