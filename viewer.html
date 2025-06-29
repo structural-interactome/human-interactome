@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mol* Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.css" />
+  <style>
+    body { margin: 0; font-family: sans-serif; background-color: #ffffff; }
+    #controls {
+      padding: 10px;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+    }
+    #structureInput {
+      padding: 6px;
+      font-size: 16px;
+      width: 300px;
+    }
+    #viewer {
+      width: 100%;
+      height: 90vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="structureInput">Enter CIF filename:</label>
+    <input type="text" id="structureInput" placeholder="e.g. Q6ZV65_O14744_Boltz-2_v2-1-1.cif" />
+  </div>
+  <div id="viewer"></div>
+
+  <script>
+    const viewer = new Molstar.Viewer("viewer", {
+      layoutIsExpanded: true,
+      showImportControls: false,
+    });
+
+    const baseUrl = "https://raw.githubusercontent.com/structural-interactome/human-interactome/main/interaction_structures/";
+    const defaultFile = "Q6ZV65_O14744_Boltz-2_v2-1-1.cif";
+
+    // Load default structure
+    viewer.loadStructureFromUrl(baseUrl + defaultFile, "mmcif");
+
+    // Hook up search bar
+    document.getElementById("structureInput").addEventListener("change", () => {
+      const filename = document.getElementById("structureInput").value.trim();
+      if (!filename.endsWith(".cif")) {
+        alert("Please enter a valid .cif filename");
+        return;
+      }
+      viewer.loadStructureFromUrl(baseUrl + filename, "mmcif")
+        .catch(err => alert("Failed to load structure: " + err));
+    });
+  </script>
+</body>
+</html>
