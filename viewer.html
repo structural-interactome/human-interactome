@@ -2,26 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mol* Viewer (EBI Version)</title>
-  <script src="https://www.ebi.ac.uk/pdbe/molstar/molstar.js"></script>
-  <link rel="stylesheet" href="https://www.ebi.ac.uk/pdbe/molstar/molstar.css" />
+  <title>Mol* Viewer (PDBe Plugin)</title>
+  <!-- Load the plugin script and its CSS from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar-plugin.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdbe-molstar@latest/build/pdbe-molstar.css" />
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; width: 100%; }
+    html, body { margin: 0; height: 100%; width: 100%; }
     #app { width: 100%; height: 100vh; }
   </style>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">Loading PDBe Mol* Viewer...</div>
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      const file = new URLSearchParams(window.location.search).get('file');
-      if (!file) {
-        document.getElementById('app').innerText = 'No CIF file specified.';
+      // Check if the plugin loaded
+      if (typeof PDBeMolstarPlugin !== 'function') {
+        document.getElementById('app').innerText = '❌ PDBeMolstarPlugin not found.';
         return;
       }
 
-      const viewerInstance = new PDBeMolstarPlugin();
-      viewerInstance.render('app', {
+      const file = new URLSearchParams(window.location.search).get('file');
+      if (!file) {
+        document.getElementById('app').innerText = '⚠️ Please specify a ?file=... URL parameter.';
+        return;
+      }
+
+      // Render the structure
+      const viewer = new PDBeMolstarPlugin();
+      viewer.render('app', {
         customData: {
           url: file,
           format: 'cif'
